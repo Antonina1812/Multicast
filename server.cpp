@@ -15,7 +15,7 @@
 #define PORT 12345
 #define BUFFER_SIZE 1024
 #define LOG_INTERVAL 5
-#define TIMEOUT_SECONDS 1
+#define TIMEOUT_SECONDS 3
 
 // TODO: добавить файлы с живыми и мёртвыми клиентами, по живым клиентам добавить системную инфу
 // TODO: добавить скрипт, который запускает много клиентов
