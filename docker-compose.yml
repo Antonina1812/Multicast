@@ -3,70 +3,18 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.server
-    network_mode: host
+    network_mode: bridge
     environment:
       - INTERFACE=eth0
     cap_add:
       - NET_RAW
     privileged: true
-    depends_on:
-      - client1
-      - client2
-      - client3
-      - client4
-      - client5
-      - client6
 
-  client1:
+  client:
     build:
       context: .
       dockerfile: Dockerfile.client
-    network_mode: host
-    environment:
-      - INTERFACE=eth0
-    privileged: true
-
-  client2:
-    build:
-      context: .
-      dockerfile: Dockerfile.client
-    network_mode: host
-    environment:
-      - INTERFACE=eth0
-    privileged: true
-
-  client3:
-    build:
-      context: .
-      dockerfile: Dockerfile.client
-    network_mode: host
-    environment:
-      - INTERFACE=eth0
-    privileged: true
-
-  client4:
-    build:
-      context: .
-      dockerfile: Dockerfile.client
-    network_mode: host
-    environment:
-      - INTERFACE=eth0
-    privileged: true
-
-  client5:
-    build:
-      context: .
-      dockerfile: Dockerfile.client
-    network_mode: host
-    environment:
-      - INTERFACE=eth0
-    privileged: true
-
-  client6:
-    build:
-      context: .
-      dockerfile: Dockerfile.client  
-    network_mode: host
+    network_mode: bridge
     environment:
       - INTERFACE=eth0
     privileged: true

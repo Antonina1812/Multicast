@@ -1,5 +1,9 @@
-docker-compose up --build
+CLIENT_COUNT=$1
 
-while true; do
-  docker-compose logs --follow
-done
+docker-compose down --remove-orphans
+
+docker-compose up -d --scale client=$CLIENT_COUNT
+
+sleep 5
+
+docker-compose logs -f
