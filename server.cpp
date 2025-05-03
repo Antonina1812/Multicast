@@ -9,7 +9,8 @@
 #include <chrono>
 #include <map>
 #include <thread>
-#include <mutex> 
+#include <mutex>
+#include <ctime>
 
 #define MULTICAST_ADDR "239.0.0.1"
 #define PORT 12345
@@ -51,8 +52,13 @@ int main() {
     char buffer[BUFFER_SIZE];
 
     while (true) {
-        std::cout << "Sending multicast ping..." << std::endl;
-        std::string msg = "ping";
+
+        time_t current_time = time(nullptr);
+        char* time_string = ctime(&current_time);
+        time_string[strlen(time_string)-1] = '\0';
+        std::cout << "Sending multicast ping: "<< time_string << std::endl;
+        std::string ping = "ping: ";
+        std::string msg = ping + time_string;
         sendto(sock, msg.c_str(), msg.size(), 0, (struct sockaddr*)&mcastAddr, sizeof(mcastAddr));
 
         auto start = std::chrono::steady_clock::now();

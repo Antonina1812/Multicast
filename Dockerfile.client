@@ -1,5 +1,5 @@
 FROM ubuntu:latest
-RUN apt-get update && apt-get install -y g++ make
+RUN apt-get update && apt-get install -y g++ make iproute2
 WORKDIR /app
 COPY client.cpp .
 RUN g++ -o client client.cpp
