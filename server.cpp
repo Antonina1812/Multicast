@@ -16,10 +16,7 @@
 #define PORT 12345
 #define BUFFER_SIZE 1024
 #define LOG_INTERVAL 5
-#define TIMEOUT_SECONDS 3
-
-// TODO: добавить файлы с живыми и мёртвыми клиентами, по живым клиентам добавить системную инфу
-// TODO: добавить скрипт, который запускает много клиентов
+#define TIMEOUT_SECONDS 0.0000000001
 
 std::map<std::string, std::chrono::steady_clock::time_point> lastSeen;
 std::mutex lastSeenMutex;
@@ -52,7 +49,6 @@ int main() {
     char buffer[BUFFER_SIZE];
 
     while (true) {
-
         time_t current_time = time(nullptr);
         char* time_string = ctime(&current_time);
         time_string[strlen(time_string)-1] = '\0';
@@ -85,9 +81,14 @@ int main() {
         {
             std::lock_guard<std::mutex> lock(lastSeenMutex);
             auto now = std::chrono::steady_clock::now();
-            for (auto it = lastSeen.begin(); it != lastSeen.end(); ++it) {
-                if (now - it->second > std::chrono::seconds(TIMEOUT_SECONDS)) {
+            std::chrono::duration<double> timeoutDuration(TIMEOUT_SECONDS);
+            for (auto it = lastSeen.begin(); it != lastSeen.end(); ) {
+                 auto timeSinceLastSeen = now - it->second;
+                if (timeSinceLastSeen > timeoutDuration) {
                     std::cout << "[WARNING] " << it->first << " is dead (no pong in " << TIMEOUT_SECONDS << " seconds)" << std::endl;
+                    it = lastSeen.erase(it);
+                } else {
+                    ++it;
                 }
             }
         }
