@@ -51,7 +51,7 @@ int main() {
 
     // Удаляем перенос строки
     myIP[strcspn(myIP, "\n")] = 0;
-    std::cout << "[CLIENT "<< myIP <<"] Started and waiting for multicast messages..." << std::endl;
+    std::cout << "CLIENT "<< myIP <<": waiting for multicast ping" << std::endl;
 
     while (true) {
         sockaddr_in senderAddr{};
@@ -64,7 +64,7 @@ int main() {
         std::string msg(buffer);
         std::string server_ip = inet_ntoa(senderAddr.sin_addr);
 
-        std::cout << "[CLIENT] Received: " << msg << " from server" << std::endl;
+        std::cout << "CLIENT: received " << msg << std::endl;
 
         if (msg.find("ping: ") == 0) {
             std::string pong = "pong";
@@ -78,7 +78,7 @@ int main() {
             myIP[strcspn(myIP, "\n")] = 0;
 
             sendto(sock, pong.c_str(), pong.size(), 0, (sockaddr*)&senderAddr, sizeof(senderAddr));
-            std::cout << "[CLIENT " << myIP << "] Sent pong to server" << std::endl;
+            std::cout << "CLIENT: " << myIP << " sent pong" << std::endl;
         }
     }
 

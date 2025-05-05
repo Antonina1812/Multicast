@@ -12,3 +12,6 @@ fi
 chmod +x run.sh
 
 ./run.sh "$CLIENT_COUNT"
+
+# chmod +x tempCodeRunnerFile.sh
+# ./tempCodeRunnerFile.sh 7

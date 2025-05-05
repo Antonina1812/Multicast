@@ -18,9 +18,6 @@
 #define LOG_INTERVAL 1
 #define TIMEOUT_SECONDS 1
 
-// TODO: добавить файлы с живыми и мёртвыми клиентами, по живым клиентам добавить системную инфу
-// TODO: добавить скрипт, который запускает много клиентов
-
 std::map<std::string, std::chrono::steady_clock::time_point> lastSeen;
 std::mutex lastSeenMutex;
 
@@ -56,7 +53,7 @@ int main() {
         time_t current_time = time(nullptr);
         char* time_string = ctime(&current_time);
         time_string[strlen(time_string)-1] = '\0';
-        std::cout << "Sending multicast ping: "<< time_string << std::endl;
+        std::cout << "SERVER: sending multicast ping: "<< time_string << std::endl;
         std::string ping = "ping: ";
         std::string msg = ping + time_string;
         sendto(sock, msg.c_str(), msg.size(), 0, (struct sockaddr*)&mcastAddr, sizeof(mcastAddr));
@@ -75,7 +72,7 @@ int main() {
                     std::lock_guard<std::mutex> lock(lastSeenMutex);
 
                     if (reply == "pong") {
-                        std::cout << "[INFO] " << ip << " is alive" << std::endl;
+                        std::cout << "SERVER: " << ip << " is alive" << std::endl;
                         lastSeen[ip] = std::chrono::steady_clock::now();
                     }
                 }
@@ -87,7 +84,7 @@ int main() {
             auto now = std::chrono::steady_clock::now();
             for (auto it = lastSeen.begin(); it != lastSeen.end(); ++it) {
                 if (now - it->second > std::chrono::seconds(TIMEOUT_SECONDS)) {
-                    std::cout << "[WARNING] " << it->first << " is dead (no pong in " << TIMEOUT_SECONDS << " seconds)" << std::endl;
+                    std::cout << "SERVER: " << it->first << " is dead (no pong in " << TIMEOUT_SECONDS << " seconds)" << std::endl;
                 }
             }
         }
